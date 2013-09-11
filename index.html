@@ -9,6 +9,8 @@
 		<script>
 			// if testing locally, start run "chrome.exe --disable-web-security" to be able to grant camera/mic access
 		
+			var roomName = 'room1';
+		
 			function getURLParameter(name) {
 				return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
 			}
@@ -22,6 +24,7 @@
 									 getURLParameter('previewVideo') == 'n';
 			
 			var webrtc = new WebRTC({
+				url: 'http://127.0.0.1:8888',
 				// all true by default, this is just for testing purposes
 				video: {
 					send		: getURLParameter('sendVideo') !== 'n',
@@ -52,7 +55,7 @@
 			
 			webrtc.on('readyToCall', function () {
 				// you can name it anything
-				webrtc.joinRoom('your awesome room name');
+				webrtc.joinRoom(roomName);
 			});
 			
 			webrtc.on('userid', function(myid) {
@@ -86,6 +89,8 @@
 				// data channel died or was closed
 			    var channel = conversation.channel,
 					userId = conversation.id;
+					
+				console.log(userId, ':', message);
 			});
 			
 			webrtc.on('mediaAdded', function(info, conversation) {
